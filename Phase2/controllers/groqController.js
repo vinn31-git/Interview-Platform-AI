@@ -13,7 +13,43 @@ const generateQuestions = async (req, res) => {
       interviewType,
     } = req.body;
 
-    const prompt = `
+    let prompt = "";
+
+    // DSA Interview Mode
+    if (interviewType === "DSA") {
+      prompt = `
+Generate ONE DSA coding interview problem.
+
+Role: ${role}
+Experience: ${experience}
+Difficulty: ${difficulty}
+
+Return ONLY valid JSON in this format:
+
+{
+  "title": "",
+  "difficulty": "",
+  "description": "",
+  "constraints": [
+    ""
+  ],
+  "examples": [
+    {
+      "input": "",
+      "output": ""
+    }
+  ],
+  "starterCode": "function solve() {\\n\\n}",
+  "testCases": [
+    {
+      "input": "",
+      "expectedOutput": ""
+    }
+  ]
+}
+`;
+    } else {
+      prompt = `
 Generate 10 interview questions.
 
 Role: ${role}
@@ -23,6 +59,7 @@ Interview Type: ${interviewType}
 
 Return only the questions as a numbered list.
 `;
+    }
 
     const completion = await groq.chat.completions.create({
       model: "llama-3.3-70b-versatile",
@@ -33,19 +70,48 @@ Return only the questions as a numbered list.
         },
       ],
     });
-     const questionsText =
-  completion.choices[0].message.content;
 
-const questions = questionsText
-  .split("\n")
-  .filter((q) => q.trim() !== "");
+    const content =
+      completion.choices[0].message.content;
 
-res.status(200).json({
-  success: true,
-  questions,
-});
+    // DSA Response
+    if (interviewType === "DSA") {
+      try {
+        const cleanedContent = content
+          .replace(/```json/g, "")
+          .replace(/```/g, "")
+          .trim();
 
-    
+        const problem =
+          JSON.parse(cleanedContent);
+
+        return res.status(200).json({
+          success: true,
+          type: "dsa",
+          problem,
+        });
+      } catch (parseError) {
+        console.log(parseError);
+
+        return res.status(500).json({
+          success: false,
+          message:
+            "Failed to parse DSA problem",
+        });
+      }
+    }
+
+    // HR / Technical / System Design
+    const questions = content
+      .split("\n")
+      .filter((q) => q.trim() !== "");
+
+    res.status(200).json({
+      success: true,
+      type: "questions",
+      questions,
+    });
+
   } catch (error) {
     console.log(error);
 
