@@ -1,0 +1,17 @@
+node_modules
+# Keep environment variables out of version control
+.env
+.env.local
+dist/
+build/
+
+coverage/
+
+Phase1/node_modules/
+Phase2/node_modules/
+
+Phase1/dist/
+Phase2/dist/
+
+*.log
+/generated/prisma
