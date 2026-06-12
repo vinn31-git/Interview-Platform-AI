@@ -141,27 +141,7 @@ AI Evaluation
 * Speech Recognition API
 * Speech Synthesis API
 
----
 
-## 📸 Screenshots
-
-### 🏠 Dashboard
-
-(Add Screenshot)
-
-### 🎤 Interview Room
-
-(Add Screenshot)
-
-### 📊 Results Page
-
-(Add Screenshot)
-
-### 💻 Coding Interview
-
-(Add Screenshot)
-
----
 
 ## 🚀 Getting Started
 
