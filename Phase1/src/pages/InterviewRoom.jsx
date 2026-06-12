@@ -2,6 +2,24 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Webcam from "react-webcam";
 import CodeEditor from "../components/CodeEditor";
+import InterviewTimer from "../components/InterviewTimer";
+import { Card, CardContent } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
+const timerMap = {
+  HR: 15 * 60,
+  Technical: 30 * 60,
+  DSA: 45 * 60,
+  "System Design": 60 * 60,
+};
+/*
+Future Enhancements:
+1. Dynamic Timer Based On Interview Type
+2. DSA Problem Viewer
+3. Judge0 Code Execution
+4. AI Voice Interviewer
+5. Auto Save Answers
+*/
 
 const InterviewRoom = () => {
   const navigate = useNavigate();
@@ -17,6 +35,11 @@ const InterviewRoom = () => {
 
   const [showEditor, setShowEditor] = useState(false);
   const [isSubmitted, setIsSubmitted] = useState(false);
+    // Progress bar percentage
+const progressPercentage =
+  questions.length > 0
+    ? ((currentQuestion + 1) / questions.length) * 100
+    : 0;
 
   useEffect(() => {
     const storedQuestions = JSON.parse(
@@ -77,7 +100,7 @@ const InterviewRoom = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100 py-8 px-4">
+    <div className="min-h-screen bg-slate-50 py-8 px-4">
       <div className="max-w-5xl mx-auto">
 
         {/* Header */}
@@ -91,10 +114,14 @@ const InterviewRoom = () => {
               Mock Interview Session
             </p>
           </div>
-
-          <div className="bg-black text-white px-4 py-2 rounded-lg font-semibold">
-            ⏱ 05:00
-          </div>
+          {/* Interview Countdown Timer */}
+          <InterviewTimer
+            duration={300} // 5 minutes in seconds
+            onTimeUp={() => {
+              alert("Time's up!");
+              handleEndInterview();
+            }}
+          />
         </div>
 
         {/* AI Interviewer */}
@@ -108,7 +135,7 @@ const InterviewRoom = () => {
           </div>
         </div>
 
-        {/* Floating Webcam */}
+         {/* Candidate Webcam Feed */}
         <div className="fixed bottom-28 right-6 z-50">
           <div className="w-64 h-40 bg-white rounded-xl shadow-lg overflow-hidden border">
             <Webcam
@@ -130,6 +157,10 @@ const InterviewRoom = () => {
               AI Generated
             </span>
           </div>
+          {/* Interview Progress */}
+        <div className="mt-4">
+        <Progress value={progressPercentage} />
+        </div>
 
           <p className="text-lg leading-relaxed">
             {questions.length > 0
@@ -140,14 +171,13 @@ const InterviewRoom = () => {
 
         {/* Toggle Editor */}
         <div className="mb-6">
-          <button
+          <Button
             onClick={() => setShowEditor(!showEditor)}
-            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
           >
             {showEditor
               ? "Hide Coding Editor"
               : "Show Coding Editor"}
-          </button>
+          </Button>
         </div>
 
         {/* Monaco Editor */}
