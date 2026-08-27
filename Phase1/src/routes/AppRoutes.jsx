@@ -7,6 +7,8 @@ import Dashboard from "../pages/Dashboard";
 import InterviewSetup from "../pages/InterviewSetup";
 import InterviewRoom from "../pages/InterviewRoom";
 import Results from "../pages/Results";
+import Analytics from "../pages/Analytics";
+import Settings from "../pages/Settings";
 
 import ProtectedRoute from "../components/ProtectedRoute";
 
@@ -45,10 +47,37 @@ const AppRoutes = () => {
       />
 
       <Route
+        path="/results/:id"
+        element={
+          <ProtectedRoute>
+            <Results />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
         path="/results"
         element={
           <ProtectedRoute>
             <Results />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/analytics"
+        element={
+          <ProtectedRoute>
+            <Analytics />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/settings"
+        element={
+          <ProtectedRoute>
+            <Settings />
           </ProtectedRoute>
         }
       />

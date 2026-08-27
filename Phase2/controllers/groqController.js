@@ -15,8 +15,8 @@ const generateQuestions = async (req, res) => {
 
     let prompt = "";
 
-    // DSA Interview Mode
-    if (interviewType === "DSA") {
+    // DSA or DSA + Technical — structured coding problem
+    if (interviewType === "DSA" || interviewType === "DSA + Technical") {
       prompt = `
 Generate ONE DSA coding interview problem.
 
@@ -75,7 +75,7 @@ Return only the questions as a numbered list.
       completion.choices[0].message.content;
 
     // DSA Response
-    if (interviewType === "DSA") {
+    if (interviewType === "DSA" || interviewType === "DSA + Technical") {
       try {
         const cleanedContent = content
           .replace(/```json/g, "")

@@ -1,8 +1,6 @@
-const { PrismaClient } = require("@prisma/client");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
-const prisma = new PrismaClient();
+const prisma = require("../utils/db");
 
 
 // SIGNUP CONTROLLER
@@ -20,9 +18,8 @@ const signup = async (req, res) => {
       });
     }
 
-    const passwordRegex =
-  /^(?=.*[a-z])(?=.*[A-Z])(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,12}$/;
-
+    // Minimum 8-16 chars, common special chars
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
    if (!passwordRegex.test(password)) {
   return res.status(400).json({
     success: false,
@@ -65,6 +62,9 @@ const signup = async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        bio: user.bio,
+        defaultRole: user.defaultRole,
+        defaultDifficulty: user.defaultDifficulty,
         createdAt: user.createdAt,
       },
     });
@@ -73,7 +73,7 @@ const signup = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: "Signup failed. An error occurred.",
     });
   }
 };
@@ -143,6 +143,9 @@ const login = async (req, res) => {
         id: user.id,
         name: user.name,
         email: user.email,
+        bio: user.bio,
+        defaultRole: user.defaultRole,
+        defaultDifficulty: user.defaultDifficulty,
         createdAt: user.createdAt,
       },
     });
@@ -151,7 +154,91 @@ const login = async (req, res) => {
 
     res.status(500).json({
       success: false,
-      message: "Server Error",
+      message: "Login failed. An error occurred.",
+    });
+  }
+};
+
+const verifyToken = async (req, res) => {
+  try {
+    const authHeader = req.headers.authorization;
+
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({
+        success: false,
+        message: "Authentication required",
+      });
+    }
+
+    const token = authHeader.split(" ")[1];
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    const user = await prisma.user.findUnique({
+      where: { id: decoded.userId },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        bio: true,
+        defaultRole: true,
+        defaultDifficulty: true,
+        createdAt: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      user,
+    });
+  } catch (error) {
+    res.status(401).json({
+      success: false,
+      message: "Invalid or expired token",
+    });
+  }
+};
+
+const updateProfile = async (req, res) => {
+  try {
+    const { name, bio, defaultRole, defaultDifficulty } = req.body;
+    const userId = req.user.userId;
+
+    const user = await prisma.user.update({
+      where: { id: userId },
+      data: {
+        name,
+        bio,
+        defaultRole,
+        defaultDifficulty,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        bio: true,
+        defaultRole: true,
+        defaultDifficulty: true,
+        createdAt: true,
+      },
+    });
+
+    res.status(200).json({
+      success: true,
+      message: "Profile updated successfully",
+      user,
+    });
+  } catch (error) {
+    console.error("Profile update error:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to update profile",
     });
   }
 };
@@ -159,4 +246,6 @@ const login = async (req, res) => {
 module.exports = {
   signup,
   login,
+  verifyToken,
+  updateProfile,
 };

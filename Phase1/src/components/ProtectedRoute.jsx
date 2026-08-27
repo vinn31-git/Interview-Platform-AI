@@ -1,10 +1,42 @@
-import { Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Navigate, useLocation } from "react-router-dom";
+import { verifyToken } from "../services/authService";
 
 const ProtectedRoute = ({ children }) => {
   const token = localStorage.getItem("token");
+  const location = useLocation();
+  const [status, setStatus] = useState(
+    token ? "checking" : "unauthenticated"
+  );
 
-  if (!token) {
-    return <Navigate to="/login" />;
+  useEffect(() => {
+    if (!token) return;
+
+    const checkAuth = async () => {
+      try {
+        const response = await verifyToken();
+        localStorage.setItem("userName", response.user.name);
+        setStatus("authenticated");
+      } catch {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userName");
+        setStatus("unauthenticated");
+      }
+    };
+
+    checkAuth();
+  }, [token]);
+
+  if (!token || status === "unauthenticated") {
+    return <Navigate to="/login" replace state={{ from: location }} />;
+  }
+
+  if (status === "checking") {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-background">
+        <div className="h-10 w-10 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+      </div>
+    );
   }
 
   return children;

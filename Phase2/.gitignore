@@ -15,3 +15,6 @@ Phase2/dist/
 
 *.log
 /generated/prisma
+
+# Test scripts
+test-*.js
