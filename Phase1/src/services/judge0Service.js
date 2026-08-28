@@ -1,13 +1,11 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/api/judge0";
+import axiosInstance from "./axiosConfig";
 
 export const runCode = async (
   sourceCode,
   languageId,
   compilerOptions = null
 ) => {
-  const response = await axios.post(`${API_URL}/run`, {
+  const response = await axiosInstance.post(`/judge0/run`, {
     sourceCode,
     languageId,
     compilerOptions,

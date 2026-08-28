@@ -46,7 +46,9 @@ const Signup = () => {
 
       navigate("/login");
     } catch (error) {
-      console.log(error);
+      if (import.meta.env.DEV) {
+        console.error("Signup Error:", error.message);
+      }
 
       if (error.response) {
         setError(error.response.data.message);

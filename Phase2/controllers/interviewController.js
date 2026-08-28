@@ -43,12 +43,14 @@ const startInterview = async (req, res) => {
       interview,
     });
   } catch (error) {
-    console.error("START INTERVIEW ERROR:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error("START INTERVIEW ERROR:", error.message);
+    }
 
-  return res.status(500).json({
-  success: false,
-  message: "An error occurred. Please try again later.",
-   });
+    return res.status(500).json({
+      success: false,
+      message: "An error occurred while creating the interview. Please try again later.",
+    });
   }
 };
 
@@ -98,11 +100,13 @@ const saveInterviewResults = async (req, res) => {
       interview,
     });
   } catch (error) {
-    console.error("SAVE INTERVIEW ERROR:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error("SAVE INTERVIEW ERROR:", error.message);
+    }
 
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "An error occurred while saving the interview",
     });
   }
 };
@@ -129,11 +133,13 @@ const getInterviewHistory = async (req, res) => {
       interviews,
     });
   } catch (error) {
-    console.error("GET HISTORY ERROR:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error("GET HISTORY ERROR:", error.message);
+    }
 
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "An error occurred while fetching interview history",
     });
   }
 };
@@ -169,11 +175,13 @@ const getInterviewById = async (req, res) => {
       interview,
     });
   } catch (error) {
-    console.error("GET INTERVIEW ERROR:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error("GET INTERVIEW ERROR:", error.message);
+    }
 
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "An error occurred while fetching the interview",
     });
   }
 };
@@ -227,11 +235,13 @@ const getDashboardStats = async (req, res) => {
       },
     });
   } catch (error) {
-    console.error("GET STATS ERROR:", error);
+    if (process.env.NODE_ENV === 'development') {
+      console.error("GET STATS ERROR:", error.message);
+    }
 
     return res.status(500).json({
       success: false,
-      message: error.message,
+      message: "An error occurred while fetching dashboard stats",
     });
   }
 };

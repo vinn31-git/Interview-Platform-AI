@@ -5,10 +5,25 @@ const interviewRoutes = require("./routes/interviewRoutes");
 const authRoutes = require("./routes/authRoutes");
 const groqRoutes = require("./routes/groqRoutes");
 const judge0Routes = require("./routes/judge0Routes");
+const cookieParser = require("cookie-parser");
+const authMiddleware = require("./middleware/authMiddleware");
+
+// Security Check: Validate critical environment variables on startup
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 32) {
+  console.error("FATAL: JWT_SECRET is not configured or is too weak (must be >= 32 chars).");
+  process.exit(1);
+}
+if (!process.env.DATABASE_URL) {
+  console.error("FATAL: DATABASE_URL is not configured.");
+  process.exit(1);
+}
+if (!process.env.GROQ_API_KEY) {
+  console.error("FATAL: GROQ_API_KEY is not configured.");
+  process.exit(1);
+}
+
 const app = express();
-const evaluationRoutes = require(
-  "./routes/evaluationRoutes"
-);
+const evaluationRoutes = require("./routes/evaluationRoutes");
 
 const rateLimit = require("express-rate-limit");
 
@@ -27,22 +42,23 @@ app.use("/api/groq/", strictLimiter);
 app.use("/api/evaluation/", strictLimiter);
 app.use("/api/judge0/", strictLimiter);
 
-
 app.use(cors({
   origin: process.env.FRONTEND_URL || "http://localhost:5173",
   credentials: true,
   optionsSuccessStatus: 200
 }));
 app.use(express.json());
+app.use(cookieParser());
 
-app.use("/api/interviews", interviewRoutes);
+// Public routes
 app.use("/api/auth", authRoutes);
-app.use("/api/groq", groqRoutes);
-app.use(
-  "/api/evaluation",
-  evaluationRoutes
-);
-app.use("/api/judge0", judge0Routes);
+
+// Protected routes
+app.use("/api/interviews", authMiddleware, interviewRoutes);
+app.use("/api/groq", authMiddleware, groqRoutes);
+app.use("/api/evaluation", authMiddleware, evaluationRoutes);
+app.use("/api/judge0", authMiddleware, judge0Routes);
+
 app.get("/", (req, res) => {
   res.send("InterviewMate AI Backend Running");
 });

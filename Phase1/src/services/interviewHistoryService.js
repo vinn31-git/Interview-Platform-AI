@@ -1,51 +1,26 @@
-import axios from "axios";
-import { getAuthHeaders } from "./authService";
-
-const API_URL = "http://localhost:5000/api/interviews";
+import axiosInstance from "./axiosConfig";
 
 export const startInterview = async (data) => {
-  const response = await axios.post(
-    `${API_URL}/start`,
-    data,
-    { headers: getAuthHeaders() }
-  );
-
+  const response = await axiosInstance.post(`/interviews/start`, data);
   return response.data;
 };
 
 export const saveInterviewResults = async (id, data) => {
-  const response = await axios.put(
-    `${API_URL}/${id}/results`,
-    data,
-    { headers: getAuthHeaders() }
-  );
-
+  const response = await axiosInstance.put(`/interviews/${id}/results`, data);
   return response.data;
 };
 
 export const getInterviewHistory = async () => {
-  const response = await axios.get(
-    `${API_URL}/history`,
-    { headers: getAuthHeaders() }
-  );
-
+  const response = await axiosInstance.get(`/interviews/history`);
   return response.data;
 };
 
 export const getInterviewById = async (id) => {
-  const response = await axios.get(
-    `${API_URL}/${id}`,
-    { headers: getAuthHeaders() }
-  );
-
+  const response = await axiosInstance.get(`/interviews/${id}`);
   return response.data;
 };
 
 export const getDashboardStats = async () => {
-  const response = await axios.get(
-    `${API_URL}/stats`,
-    { headers: getAuthHeaders() }
-  );
-
+  const response = await axiosInstance.get(`/interviews/stats`);
   return response.data;
 };

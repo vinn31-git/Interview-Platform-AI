@@ -54,6 +54,26 @@ const signup = async (req, res) => {
       },
     });
 
+    // Generate JWT token for signup to auto-login
+    const token = jwt.sign(
+      {
+        userId: user.id,
+        email: user.email,
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d",
+      }
+    );
+
+    // Set JWT in HttpOnly cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production", // Secure in prod (HTTPS)
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
     // Send response without password
     res.status(201).json({
       success: true,
@@ -69,8 +89,9 @@ const signup = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
-
+    if (process.env.NODE_ENV === 'development') {
+      console.error("Signup error:", error.message);
+    }
     res.status(500).json({
       success: false,
       message: "Signup failed. An error occurred.",
@@ -134,6 +155,14 @@ const login = async (req, res) => {
       }
     );
 
+    // Set JWT in HttpOnly cookie
+    res.cookie("token", token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
     // Login successful
     res.status(200).json({
       success: true,
@@ -150,8 +179,9 @@ const login = async (req, res) => {
       },
     });
   } catch (error) {
-    console.log(error);
-
+    if (process.env.NODE_ENV === 'development') {
+      console.error("Login error:", error.message);
+    }
     res.status(500).json({
       success: false,
       message: "Login failed. An error occurred.",
@@ -161,16 +191,22 @@ const login = async (req, res) => {
 
 const verifyToken = async (req, res) => {
   try {
-    const authHeader = req.headers.authorization;
+    let token = req.cookies?.token;
+    
+    if (!token) {
+      const authHeader = req.headers.authorization;
+      if (authHeader && authHeader.startsWith("Bearer ")) {
+        token = authHeader.split(" ")[1];
+      }
+    }
 
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    if (!token) {
       return res.status(401).json({
         success: false,
         message: "Authentication required",
       });
     }
 
-    const token = authHeader.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
     const user = await prisma.user.findUnique({

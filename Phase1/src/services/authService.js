@@ -1,34 +1,21 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/api/auth";
-
-const getAuthHeaders = () => {
-  const token = localStorage.getItem("token");
-  return token ? { Authorization: `Bearer ${token}` } : {};
-};
+import axiosInstance from "./axiosConfig";
 
 export const loginUser = async (userData) => {
-  const response = await axios.post(`${API_URL}/login`, userData);
+  const response = await axiosInstance.post(`/auth/login`, userData);
   return response.data;
 };
 
 export const signupUser = async (userData) => {
-  const response = await axios.post(`${API_URL}/signup`, userData);
+  const response = await axiosInstance.post(`/auth/signup`, userData);
   return response.data;
 };
 
 export const verifyToken = async () => {
-  const response = await axios.get(`${API_URL}/verify`, {
-    headers: getAuthHeaders(),
-  });
+  const response = await axiosInstance.get(`/auth/verify`);
   return response.data;
 };
 
 export const updateProfile = async (profileData) => {
-  const response = await axios.put(`${API_URL}/profile`, profileData, {
-    headers: getAuthHeaders(),
-  });
+  const response = await axiosInstance.put(`/auth/profile`, profileData);
   return response.data;
 };
-
-export { getAuthHeaders };

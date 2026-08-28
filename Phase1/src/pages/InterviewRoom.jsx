@@ -150,7 +150,9 @@ const InterviewRoom = () => {
         );
       }
     } catch (error) {
-      console.error("Failed to load interview data:", error);
+      if (import.meta.env.DEV) {
+        console.error("Failed to load interview data:", error.message);
+      }
     }
   }, []);
 
@@ -165,7 +167,9 @@ const InterviewRoom = () => {
         setPhase(response.phase);
         setInterviewStarted(true);
       } catch (error) {
-        console.error(error);
+        if (import.meta.env.DEV) {
+          console.error("Init Interview Error:", error.message);
+        }
         addInterviewerMessage(
           "Hello! I'm Priya, your AI interviewer today. Before we begin, could you please introduce yourself — tell me about your background and experience?"
         );
@@ -222,7 +226,9 @@ const InterviewRoom = () => {
         setTimeout(() => presentCurrentQuestion(newConversation), 1500);
       }
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) {
+        console.error("Chat Error:", error.message);
+      }
       addInterviewerMessage(
         "Thank you for sharing that. Could you elaborate a bit more on your experience?"
       );
@@ -247,7 +253,9 @@ const InterviewRoom = () => {
       speak(response.reply);
       setPhase("question");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) {
+        console.error("Present Question Error:", error.message);
+      }
       const fallback = `Alright, let's move to your first question. ${getCurrentQuestionText()}`;
       addInterviewerMessage(fallback);
       setPhase("question");
@@ -285,7 +293,9 @@ const InterviewRoom = () => {
         await saveInterviewResults(interviewId, { answers: updatedAnswers });
       }
     } catch (error) {
-      console.error("Failed to sync progressive answers to backend:", error);
+      if (import.meta.env.DEV) {
+        console.error("Failed to sync progressive answers to backend:", error.message);
+      }
     }
   };
 
@@ -353,7 +363,9 @@ const InterviewRoom = () => {
       );
       setOutput(result.output || "No output");
     } catch (error) {
-      console.error(error);
+      if (import.meta.env.DEV) {
+        console.error("Run Code Error:", error.message);
+      }
       setOutput("Error while executing code.");
     } finally {
       setRunningCode(false);

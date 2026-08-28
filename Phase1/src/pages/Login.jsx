@@ -31,12 +31,14 @@ const Login = () => {
     try {
       const response = await loginUser(formData);
 
-      localStorage.setItem("token", response.token);
+      // Token is now securely stored in HttpOnly cookie by the backend
       localStorage.setItem("userName", response.user.name);
 
       navigate("/dashboard");
     } catch (error) {
-      console.log(error);
+      if (import.meta.env.DEV) {
+        console.error("Login Error:", error.message);
+      }
 
       if (error.response) {
         setError(error.response.data.message);

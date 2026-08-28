@@ -1,10 +1,8 @@
-import axios from "axios";
-
-const API_URL = "http://localhost:5000/api/groq";
+import axiosInstance from "./axiosConfig";
 
 export const generateQuestions = async (data) => {
-  const response = await axios.post(
-    `${API_URL}/generate-questions`,
+  const response = await axiosInstance.post(
+    `/groq/generate-questions`,
     data
   );
 

@@ -83,7 +83,9 @@ const Results = () => {
           });
         }
       } catch (err) {
-        console.error(err);
+        if (import.meta.env.DEV) {
+          console.error("Evaluation Error:", err.message);
+        }
         setError("Failed to generate evaluation. Please try again.");
       } finally {
         setLoading(false);
