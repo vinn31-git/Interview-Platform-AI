@@ -18,14 +18,14 @@ const signup = async (req, res) => {
       });
     }
 
-    // Minimum 8-16 chars, common special chars
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-   if (!passwordRegex.test(password)) {
-  return res.status(400).json({
-    success: false,
-    message:
-      "Password must contain uppercase, lowercase, special character and be 6-12 characters long",
-  });
+    // Minimum 8 chars, at least one uppercase, lowercase, number, and special char
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{8,}$/;
+    if (!passwordRegex.test(password)) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "Password must contain uppercase, lowercase, number, special character and be at least 8 characters long",
+      });
     }
 
     // Check if user already exists
@@ -271,7 +271,7 @@ const updateProfile = async (req, res) => {
       user,
     });
   } catch (error) {
-    console.error("Profile update error:", error);
+    console.error("Profile update error:", error.message);
     res.status(500).json({
       success: false,
       message: "Failed to update profile",

@@ -138,8 +138,8 @@ const Signup = () => {
               </div>
 
               <p className="text-xs text-muted-foreground mt-1">
-                Password must contain uppercase, lowercase,
-                special character and be 6-12 characters long.
+                Password must contain uppercase, lowercase, number,
+                special character and be at least 8 characters long.
               </p>
             </div>
 

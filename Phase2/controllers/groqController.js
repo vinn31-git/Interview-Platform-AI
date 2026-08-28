@@ -62,7 +62,7 @@ Return only the questions as a numbered list.
     }
 
     const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "openai/gpt-oss-120b",
       messages: [
         {
           role: "user",
@@ -91,7 +91,7 @@ Return only the questions as a numbered list.
           problem,
         });
       } catch (parseError) {
-        console.log(parseError);
+        console.error("Parse Error:", parseError.message);
 
         return res.status(500).json({
           success: false,
@@ -113,7 +113,7 @@ Return only the questions as a numbered list.
     });
 
   } catch (error) {
-    console.log(error);
+    console.error("Generate Error:", error.message);
 
     res.status(500).json({
       success: false,

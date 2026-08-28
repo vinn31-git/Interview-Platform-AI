@@ -32,7 +32,7 @@ const startInterview = async (req, res) => {
         difficulty,
         interviewType,
         duration,
-        questions: questions || null,
+        questions: questions ? JSON.stringify(questions) : null,
         userId: req.user?.userId || null,
       },
     });
@@ -40,7 +40,10 @@ const startInterview = async (req, res) => {
     return res.status(201).json({
       success: true,
       message: "Interview created successfully",
-      interview,
+      interview: {
+        ...interview,
+        questions: interview.questions ? JSON.parse(interview.questions) : null,
+      },
     });
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
@@ -49,7 +52,7 @@ const startInterview = async (req, res) => {
 
     return res.status(500).json({
       success: false,
-      message: "An error occurred while creating the interview. Please try again later.",
+      message: "An error occurred while creating the interview. Please try again later. Details: " + error.message,
     });
   }
 };
@@ -84,8 +87,8 @@ const saveInterviewResults = async (req, res) => {
     const interview = await prisma.interview.update({
       where: { id },
       data: {
-        answers: answers || existing.answers,
-        evaluation: evaluation || existing.evaluation,
+        answers: answers ? JSON.stringify(answers) : existing.answers,
+        evaluation: evaluation ? JSON.stringify(evaluation) : existing.evaluation,
         score:
           score ??
           (evaluation?.overallScore
@@ -97,7 +100,12 @@ const saveInterviewResults = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "Interview results saved",
-      interview,
+      interview: {
+        ...interview,
+        questions: interview.questions ? JSON.parse(interview.questions) : null,
+        answers: interview.answers ? JSON.parse(interview.answers) : null,
+        evaluation: interview.evaluation ? JSON.parse(interview.evaluation) : null,
+      },
     });
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {
@@ -172,7 +180,12 @@ const getInterviewById = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      interview,
+      interview: {
+        ...interview,
+        questions: interview.questions ? JSON.parse(interview.questions) : null,
+        answers: interview.answers ? JSON.parse(interview.answers) : null,
+        evaluation: interview.evaluation ? JSON.parse(interview.evaluation) : null,
+      },
     });
   } catch (error) {
     if (process.env.NODE_ENV === 'development') {

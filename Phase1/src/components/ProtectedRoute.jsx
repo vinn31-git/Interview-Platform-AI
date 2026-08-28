@@ -3,31 +3,25 @@ import { Navigate, useLocation } from "react-router-dom";
 import { verifyToken } from "../services/authService";
 
 const ProtectedRoute = ({ children }) => {
-  const token = localStorage.getItem("token");
   const location = useLocation();
-  const [status, setStatus] = useState(
-    token ? "checking" : "unauthenticated"
-  );
+  const [status, setStatus] = useState("checking");
 
   useEffect(() => {
-    if (!token) return;
-
     const checkAuth = async () => {
       try {
         const response = await verifyToken();
         localStorage.setItem("userName", response.user.name);
         setStatus("authenticated");
       } catch {
-        localStorage.removeItem("token");
         localStorage.removeItem("userName");
         setStatus("unauthenticated");
       }
     };
 
     checkAuth();
-  }, [token]);
+  }, []);
 
-  if (!token || status === "unauthenticated") {
+  if (status === "unauthenticated") {
     return <Navigate to="/login" replace state={{ from: location }} />;
   }
 

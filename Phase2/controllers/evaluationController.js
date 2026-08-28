@@ -135,7 +135,7 @@ const evaluateInterview = async (req, res) => {
     });
 
     const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "openai/gpt-oss-120b",
       messages: [{ role: "user", content: prompt }],
       temperature: 0.2,
     });
@@ -150,8 +150,7 @@ const evaluateInterview = async (req, res) => {
         evaluation: parsedEvaluation,
       });
     } catch (parseError) {
-      console.error("JSON PARSE ERROR:", parseError);
-      console.error("FAILED CONTENT:", result);
+      console.error("JSON PARSE ERROR:", parseError.message);
 
       return res.status(500).json({
         success: false,
@@ -159,7 +158,7 @@ const evaluateInterview = async (req, res) => {
       });
     }
   } catch (error) {
-    console.error("EVALUATION ERROR:", error);
+    console.error("EVALUATION ERROR:", error.message);
 
     res.status(500).json({
       success: false,

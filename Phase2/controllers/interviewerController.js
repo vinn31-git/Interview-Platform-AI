@@ -76,7 +76,7 @@ const getInitialMessage = async (req, res) => {
     });
 
     const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "openai/gpt-oss-120b",
       messages,
       temperature: 0.7,
       max_tokens: 300,
@@ -91,7 +91,7 @@ const getInitialMessage = async (req, res) => {
       action: "wait_for_candidate",
     });
   } catch (error) {
-    console.error("INTERVIEWER INIT ERROR:", error);
+    console.error("INTERVIEWER INIT ERROR:", error.message);
     res.status(500).json({
       success: false,
       message: "Failed to start interview conversation",
@@ -125,7 +125,7 @@ const chatWithInterviewer = async (req, res) => {
     });
 
     const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "openai/gpt-oss-120b",
       messages,
       temperature: 0.7,
       max_tokens: 400,
@@ -163,7 +163,7 @@ const chatWithInterviewer = async (req, res) => {
       action,
     });
   } catch (error) {
-    console.error("INTERVIEWER CHAT ERROR:", error);
+    console.error("INTERVIEWER CHAT ERROR:", error.message);
     res.status(500).json({
       success: false,
       message: "Failed to get interviewer response",
@@ -187,7 +187,7 @@ const presentQuestion = async (req, res) => {
     });
 
     const completion = await groq.chat.completions.create({
-      model: "llama-3.3-70b-versatile",
+      model: "openai/gpt-oss-120b",
       messages,
       temperature: 0.7,
       max_tokens: 500,
@@ -202,7 +202,7 @@ const presentQuestion = async (req, res) => {
       action: "wait_for_candidate",
     });
   } catch (error) {
-    console.error("PRESENT QUESTION ERROR:", error);
+    console.error("PRESENT QUESTION ERROR:", error.message);
     res.status(500).json({
       success: false,
       message: "Failed to present question",
