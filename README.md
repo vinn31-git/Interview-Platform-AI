@@ -1,206 +1,131 @@
-# 🚀 AI Interview Platform
+# InterviewMate: AI-Powered Technical Interview Simulator
 
-> An AI-powered mock interview platform that simulates real-world technical, HR, coding, and system design interviews using Groq AI, automated evaluation, coding assessments, webcam monitoring, and performance analytics.
+An intelligent mock interview platform designed to simulate real-world technical, HR, coding, and system design interviews. The system leverages large language models (LLMs) to provide dynamic question generation, real-time conversational interviewing, and comprehensive performance analytics.
 
 ![Status](https://img.shields.io/badge/Status-Active%20Development-success)
 ![Frontend](https://img.shields.io/badge/Frontend-React-blue)
 ![Backend](https://img.shields.io/badge/Backend-Node.js-green)
-![Database](https://img.shields.io/badge/Database-Neon%20PostgreSQL-blueviolet)
-![AI](https://img.shields.io/badge/AI-Groq-orange)
+![Database](https://img.shields.io/badge/Database-SQLite-blueviolet)
+![AI](https://img.shields.io/badge/AI-Groq%20API-orange)
 
 ---
 
-## 🎯 Project Vision
+## 1. Project Overview
 
-Preparing for interviews can be stressful and inconsistent.
+Preparing for technical interviews requires consistent practice and actionable feedback. InterviewMate acts as a virtual interviewer by providing a complete, end-to-end interview lifecycle:
 
-This platform acts as a virtual interviewer that:
-
-✅ Generates AI-powered interview questions
-
-✅ Conducts mock interviews
-
-✅ Evaluates responses automatically
-
-✅ Tracks interview performance
-
-✅ Simulates coding interviews
-
-✅ Analyzes communication skills
+- **Dynamic Question Generation:** Questions are tailored to the candidate's chosen role, experience level, and difficulty.
+- **Interactive Mock Interviews:** Simulates a conversational flow with follow-up questions based on the candidate's previous answers.
+- **Automated Evaluation:** Uses LLMs to holistically grade communication skills, technical accuracy, and problem-solving abilities.
+- **Integrated Coding Environment:** Includes an embedded code editor for Data Structures & Algorithms (DSA) rounds.
 
 ---
 
-## ✨ Features
+## 2. System Architecture
 
-| Feature                     | Status         |
-| --------------------------- | -------------- |
-| 🔐 JWT Authentication       | ✅ Completed    |
-| 👤 User Dashboard           | ✅ Completed    |
-| 🤖 AI Question Generation   | ✅ Completed    |
-| 📊 AI Evaluation & Feedback | ✅ Completed    |
-| 📷 Webcam Monitoring        | ✅ Completed    |
-| 📝 Monaco Code Editor       | ✅ Completed    |
-| 💾 PostgreSQL Database      | ✅ Completed    |
-|  Coding Interview Mode    | 🚧 In Progress |
-|  Judge0 Compiler           | 🚧 In Progress |
-|  Speech Recognition       | 📅 Planned     |
-|  AI Voice Interviewer     | 📅 Planned     |
-|  Interview Analytics      | 📅 Planned     |
-
----
-
-## 🏗️ System Architecture
+The application follows a standard Client-Server architecture with a RESTful API communicating with a relational database and external AI services.
 
 ```text
 ┌─────────────────┐
-│ React Frontend  │
+│ React Frontend  │ (Vite, TailwindCSS, Monaco Editor)
 └────────┬────────┘
+         │ HTTP/REST
+         ▼
+┌─────────────────┐
+│ Express Backend │ (Node.js, Prisma ORM, JWT Auth)
+└────────┬────────┘
+         │
+         ├────────► Groq API (LLM inference for generation & evaluation)
          │
          ▼
 ┌─────────────────┐
-│ Express Backend │
-└────────┬────────┘
-         │
-         ├────────► Groq AI
-         │            │
-         │            ▼
-         │     Questions & Evaluation
-         │
-         ▼
-┌─────────────────┐
-│ Neon PostgreSQL │
+│ SQLite Database │ (Relational data storage)
 └─────────────────┘
 ```
 
 ---
 
-## 🔄 Interview Workflow
+## 3. Key Features
 
-```text
-Interview Setup
-        ↓
-AI Generates Questions
-        ↓
-Candidate Answers
-        ↓
-AI Evaluation
-        ↓
-Score + Feedback
-        ↓
-Performance Review
-```
+- **Secure Authentication:** Implements JWT-based authentication using HTTP-only cookies to prevent Cross-Site Scripting (XSS) attacks.
+- **AI-Driven Logic:** Integrates with the Groq API (using large models like `gpt-oss-120b`) for ultra-fast, context-aware interview simulations.
+- **Webcam Integration:** Simulates a proctored or live interview environment.
+- **Security Hardened:** Features strict API rate-limiting, CORS origin restrictions, global error handling, and JSON payload limits to prevent abuse and data leakage.
+- **Coding Assessments:** Embedded Monaco Editor for live coding problem solving.
 
 ---
 
-## 💻 Coding Interview Workflow
+## 4. Technology Stack
 
-```text
-Coding Problem
-      ↓
-Monaco Editor
-      ↓
-Run Code
-      ↓
-Judge0 Compiler
-      ↓
-Test Cases
-      ↓
-AI Evaluation
-```
+**Client-Side (Frontend)**
+- React.js (Vite)
+- Tailwind CSS
+- Monaco Editor
+- React Webcam
 
----
+**Server-Side (Backend)**
+- Node.js & Express.js
+- Prisma ORM
+- JSON Web Tokens (JWT) & bcrypt
+- Express Rate Limit
 
-## 🛠️ Tech Stack
-
-### Frontend
-
-* React.js
-* React Router
-* Tailwind CSS
-* Monaco Editor
-* React Webcam
-
-### Backend
-
-* Node.js
-* Express.js
-* JWT Authentication
-* Prisma ORM
-
-### Database
-
-* Neon PostgreSQL
-
-### AI
-
-* Groq API
-
-### Upcoming
-
-* Judge0
-* Speech Recognition API
-* Speech Synthesis API
-
-
-
-## 🚀 Getting Started
-
-### Clone Repository
-
-```bash
-git clone https://github.com/vinn31-git/Interview-Platform-AI.git
-cd Interview-Platform-AI
-```
-
-### Frontend
-
-```bash
-cd Phase1
-npm install
-npm run dev
-```
-
-### Backend
-
-```bash
-cd Phase2
-npm install
-npm run dev
-```
-
-### Environment Variables
-
-```env
-DATABASE_URL=your_database_url
-JWT_SECRET=your_secret
-GROQ_API_KEY=your_groq_key
-```
+**Database & External Services**
+- SQLite (Development)
+- Groq AI API
 
 ---
 
-## 📌 Current Progress
+## 5. Local Development Setup
 
-```text
-Authentication           ██████████ 100%
-Question Generation      ██████████ 100%
-AI Evaluation            ██████████ 100%
-Webcam Integration       ██████████ 100%
-Monaco Editor            ██████████ 100%
+### Prerequisites
+- Node.js (v16 or higher)
+- npm or yarn
 
-Coding Mode              ███████░░░ 70%
-Judge0 Integration       ░░░░░░░░░░ 0%
-Speech Recognition       ░░░░░░░░░░ 0%
-Analytics Dashboard      ░░░░░░░░░░ 0%
-```
+### Installation Steps
+
+1. **Clone the Repository**
+   ```bash
+   git clone https://github.com/vinn31-git/Interview-Platform-AI.git
+   cd Interview-Platform-AI
+   ```
+
+2. **Configure Environment Variables**
+   Navigate to the `Phase2` directory and create a `.env` file with the following variables:
+   ```env
+   DATABASE_URL="file:./dev.db"
+   JWT_SECRET="your_secure_random_string_here_min_32_chars"
+   GROQ_API_KEY="your_groq_api_key_here"
+   FRONTEND_URL="http://localhost:5173"
+   ```
+
+3. **Start the Backend Server**
+   ```bash
+   cd Phase2
+   npm install
+   npx prisma generate
+   npx prisma db push
+   npm run dev
+   ```
+
+4. **Start the Frontend Client**
+   Open a new terminal window:
+   ```bash
+   cd Phase1
+   npm install
+   npm run dev
+   ```
 
 ---
 
-## 👨‍💻 Author
+## 6. Current Progress & Roadmap
 
-**Sahasra**
-
-🔗 GitHub: https://github.com/vinn31-git
+- **Completed:** JWT Authentication, AI Question Generation, Conversational Interview Engine, Automated Evaluation, Database Schema (SQLite), Security Hardening.
+- **In Progress:** Judge0 Compiler Integration for executable code validation.
+- **Planned:** Speech-to-Text Recognition for verbal answers, comprehensive Analytics Dashboard for tracking historical performance.
 
 ---
 
-⭐ If you found this project interesting, consider starring the repository!
+## 7. Author
+
+**Sahasra**  
+GitHub: [vinn31-git](https://github.com/vinn31-git)
