@@ -1,4 +1,4 @@
-# AI Interview Platform -- Project Handover Log
+# AI Interview Platform -- Project Docs
 
 ## Project
 
@@ -29,7 +29,7 @@ Platform
 
 ## Database
 
--   PostgreSQL (Neon)
+-   PostgreSQL (Neon) --> SQL Lite
 -   Prisma ORM
 
 ## AI / External APIs
@@ -204,17 +204,7 @@ Estimated Progress: **\~85%**
 
 ------------------------------------------------------------------------
 
-# Suggested Development Order
 
-1.  AI Evaluation Improvements
-2.  Dashboard History
-3.  Dark Theme
-4.  UI Animations
-5.  DSA Problem Viewer
-6.  Deployment
-7.  Resume & Portfolio Polish
-
-------------------------------------------------------------------------
 
 # Safe Checkpoint
 
